@@ -4,6 +4,8 @@ import LoginPage from './pages/Login';
 import ProfilePage from './pages/Profile';
 import SignupPage from './pages/Signup';
 import ProductPage from './pages/Products';
+import TransaksiPage from './pages/Transactions';
+import axios from 'axios';
 
 function App() {
   return (
@@ -14,9 +16,13 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/products" element={<ProductPage />} />
+        <Route path="/transaksi" element={<TransaksiPage />} />
       </Routes>
     </Router>
   );
 }
+
+axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.withCredentials = true;
 
 export default App;

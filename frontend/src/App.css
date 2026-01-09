@@ -433,12 +433,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  align-items: center;
-}
-
-.search-container {
-  flex: 1;
-  max-width: 600px;
 }
 
 .search-bar {
@@ -448,43 +442,6 @@ body {
   border: 1px solid #ddd;
   background: white;
   outline: none;
-  font-size: 14px;
-}
-
-.action-group {
-  display: flex;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-.btn-action {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 15px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  background: white;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  color: #555;
-  transition: 0.3s;
-  white-space: nowrap; /* Teks tidak turun ke bawah */
-}
-
-.btn-action:hover {
-  background-color: #f0f0f0;
-}
-
-.btn-add {
-  background-color: var(--pink-primary);
-  color: white;
-  border: none;
-}
-
-.btn-add:hover {
-  background-color: #E04360;
 }
 
 .filter-group {
