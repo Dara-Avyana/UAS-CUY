@@ -5,6 +5,7 @@ import ProfilePage from './pages/Profile';
 import SignupPage from './pages/Signup';
 import ProductPage from './pages/Products';
 import TransaksiPage from './pages/Transactions';
+import PegawaiPage from './pages/Pegawai';
 import axios from 'axios';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/products" element={<ProductPage />} />
         <Route path="/transaksi" element={<TransaksiPage />} />
+        <Route path="/pegawai" element={<PegawaiPage />} />
       </Routes>
     </Router>
   );
