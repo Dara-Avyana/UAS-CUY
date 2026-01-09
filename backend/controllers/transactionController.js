@@ -1,19 +1,30 @@
-const db = require("../config/db");
+const db = require('../config/db');
 
-exports.createTransaction = async (req, res) => {
-  const { product_id, quantity } = req.body;
+exports.createTransaction = (req, res) => {
+  const { product_id, type, quantity } = req.body;
 
-  const [[product]] = await db.query(
-    "SELECT price FROM products WHERE id=?",
-    [product_id]
+  const stockChange = type === 'IN' ? quantity : -quantity;
+
+  db.query(
+    'UPDATE products SET stock = stock + ? WHERE id=?',
+    [stockChange, product_id]
   );
 
-  const total = product.price * quantity;
-
-  await db.query(
-    "INSERT INTO transactions VALUES (NULL,?,?,?,?,NOW())",
-    [req.user.id, product_id, quantity, total]
+  db.query(
+    'INSERT INTO transactions VALUES (NULL,?,?,?,?,NOW())',
+    [product_id, req.user.id, type, quantity],
+    () => res.json({ message: 'Transaction saved' })
   );
+};
 
-  res.json({ message: "Transaction success" });
+exports.getTransactions = (req, res) => {
+  db.query('SELECT * FROM transactions', (e, r) => res.json(r));
+};
+
+exports.deleteTransaction = (req, res) => {
+  db.query(
+    'DELETE FROM transactions WHERE id=?',
+    [req.params.id],
+    () => res.json({ message: 'Transaction deleted' })
+  );
 };

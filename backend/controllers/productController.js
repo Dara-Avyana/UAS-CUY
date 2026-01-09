@@ -1,16 +1,20 @@
-const db = require("../config/db");
+const db = require('../config/db');
 
-exports.createProduct = async (req, res) => {
+exports.createProduct = (req, res) => {
   const { name, price, stock } = req.body;
-  await db.query("INSERT INTO products VALUES (NULL,?,?,?)", [
-    name,
-    price,
-    stock,
-  ]);
-  res.json({ message: "Product added" });
+  db.query(
+    'INSERT INTO products VALUES (NULL,?,?,?)',
+    [name, price, stock],
+    () => res.json({ message: 'Product added' })
+  );
 };
 
-exports.getProducts = async (req, res) => {
-  const [data] = await db.query("SELECT * FROM products");
-  res.json(data);
+exports.getProducts = (req, res) => {
+  db.query('SELECT * FROM products', (e, r) => res.json(r));
+};
+
+exports.deleteProduct = (req, res) => {
+  db.query('DELETE FROM products WHERE id=?', [req.params.id],
+    () => res.json({ message: 'Product deleted' })
+  );
 };

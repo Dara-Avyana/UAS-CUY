@@ -1,9 +1,12 @@
-const router = require("express").Router();
-const auth = require("../middlewares/authMiddleware");
-const role = require("../middlewares/roleMiddleware");
-const c = require("../controllers/productController");
+const express = require('express');
+const router = express.Router();
 
-router.post("/", auth, role("admin"), c.createProduct);
-router.get("/", c.getProducts);
+const auth = require('../middlewares/authMiddleware');
+const role = require('../middlewares/roleMiddleware');
+const productController = require('../controllers/productController');
+
+router.post('/', auth, role('admin'), productController.createProduct);
+router.get('/', auth, productController.getProducts);
+router.delete('/:id', auth, role('admin'), productController.deleteProduct);
 
 module.exports = router;

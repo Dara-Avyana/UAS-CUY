@@ -3,5 +3,6 @@ const auth = require("../middlewares/authMiddleware");
 const c = require("../controllers/transactionController");
 
 router.post("/", auth, c.createTransaction);
+router.get("/", auth, c.getTransactions);
 
 module.exports = router;
