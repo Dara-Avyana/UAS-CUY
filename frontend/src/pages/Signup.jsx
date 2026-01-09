@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // 1. Pastikan Axios di-import
 import '../App.css';
 
 const SignupPage = () => {
@@ -15,19 +16,44 @@ const SignupPage = () => {
         confirmPassword: ''
     });
 
+    // Fungsi untuk mengupdate state setiap kali input diketik
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSignup = (e) => {
+    // 2. Fungsi handleSignup yang terhubung ke Backend
+    const handleSignup = async (e) => {
         e.preventDefault();
+
+        // Validasi: Cek kecocokan password
         if (formData.password !== formData.confirmPassword) {
             alert("Password tidak cocok!");
             return;
         }
-        console.log("Registered:", formData);
-        navigate('/login');
+
+        try {
+            // Mengirim data ke backend (Stateless)
+            // Sesuaikan '/api/register' dengan route di backend kamu
+            const response = await axios.post('/api/register', {
+                username: formData.username,
+                fullName: formData.fullName,
+                age: formData.age,
+                email: formData.email,
+                keyword: formData.keyword,
+                password: formData.password
+            });
+
+            // Jika berhasil
+            alert("Registrasi Berhasil! Silakan Login.");
+            navigate('/login');
+            
+        } catch (err) {
+            // Jika gagal (server mati, username duplikat, dll)
+            console.error("Signup error:", err);
+            const message = err.response?.data?.message || "Koneksi ke server gagal!";
+            alert(message);
+        }
     };
 
     return (
@@ -48,11 +74,11 @@ const SignupPage = () => {
                         <label className="label-side">Username :</label>
                         <div className="input-flex">
                             <input name="username"
-                            className="input-field"
-                            placeholder="Enter username"
-                            onChange={handleChange}
-                            value={formData.username}
-                            required />
+                                className="input-field"
+                                placeholder="Enter username"
+                                onChange={handleChange}
+                                value={formData.username}
+                                required />
                         </div>
                     </div>
 
@@ -61,11 +87,11 @@ const SignupPage = () => {
                         <label className="label-side">Full Name :</label>
                         <div className="input-flex">
                             <input name="fullName"
-                            className="input-field"
-                            placeholder="Enter full name"
-                            onChange={handleChange}
-                            value={formData.fullName}
-                            required />
+                                className="input-field"
+                                placeholder="Enter full name"
+                                onChange={handleChange}
+                                value={formData.fullName}
+                                required />
                         </div>
                     </div>
 
@@ -74,12 +100,12 @@ const SignupPage = () => {
                         <label className="label-side">Age :</label>
                         <div className="input-flex">
                             <input name="age"
-                            type="number"
-                            className="input-field"
-                            placeholder="Enter Age"
-                            onChange={handleChange}
-                            value={formData.age}
-                            required />
+                                type="number"
+                                className="input-field"
+                                placeholder="Enter Age"
+                                onChange={handleChange}
+                                value={formData.age}
+                                required />
                         </div>
                     </div>
 
@@ -88,12 +114,12 @@ const SignupPage = () => {
                         <label className="label-side">Email :</label>
                         <div className="input-flex">
                             <input name="email"
-                            type="email"
-                            className="input-field"
-                            placeholder="example@mail.com"
-                            onChange={handleChange}
-                            value={formData.email}
-                            required />
+                                type="email"
+                                className="input-field"
+                                placeholder="example@mail.com"
+                                onChange={handleChange}
+                                value={formData.email}
+                                required />
                         </div>
                     </div>
 
@@ -102,11 +128,11 @@ const SignupPage = () => {
                         <label className="label-side">Keyword :</label>
                         <div className="input-flex">
                             <input name="keyword"
-                            className="input-field"
-                            placeholder="Secret Key"
-                            onChange={handleChange}
-                            value={formData.keyword}
-                            required />
+                                className="input-field"
+                                placeholder="Secret Key"
+                                onChange={handleChange}
+                                value={formData.keyword}
+                                required />
                         </div>
                     </div>
 
@@ -118,13 +144,18 @@ const SignupPage = () => {
                                 name="password"
                                 type={showPassword ? 'text' : 'password'}
                                 className="input-field"
-                                style={{ width: '90%', paddingRight: '45px' }}
+                                style={{ width: '100%', paddingRight: '45px' }}
                                 placeholder="Create password"
                                 onChange={handleChange}
                                 value={formData.password}
                                 required
                             />
-                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="btn-toggle-eye">
+                            <button 
+                                type="button" 
+                                onClick={() => setShowPassword(!showPassword)} 
+                                className="btn-toggle-eye"
+                                style={{ position: 'absolute', right: '10px', background: 'none', border: 'none', cursor: 'pointer' }}
+                            >
                                 {showPassword ? '🤐' : '😎'}
                             </button>
                         </div>
@@ -149,7 +180,7 @@ const SignupPage = () => {
                     <button type="submit" className="btn-submit-signup">Sign Up</button>
                     
                     <p className="footer-text">
-                        Already have an account? <span className="link-pink" onClick={() => navigate('/login')}>Login</span>
+                        Already have an account? <span className="link-pink" style={{ cursor: 'pointer', fontWeight: 'bold' }} onClick={() => navigate('/login')}>Login</span>
                     </p>
                 </form>
             </div>
