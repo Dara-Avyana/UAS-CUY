@@ -26,7 +26,7 @@ body {
 
 .profile-header {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .profile-header h2 {
@@ -68,14 +68,14 @@ body {
 .profile-container {
   width: 95%;
   max-width: 450px;
-  padding: 40px;
+  padding: 30px;
   background-color: #FFFFFF;
   border-radius: 30px;
   box-shadow: 0 15px 35px rgba(255, 182, 193, 0.3);
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin: 50px auto;
+  gap: 10px;
+  margin: 30px auto;
 }
 
 .input-group {
@@ -289,6 +289,63 @@ body {
   box-sizing: border-box;
 }
 
+/* Container utama dropdown */
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 50px; /* Jarak dari ikon gear */
+  background: white;
+  min-width: 180px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Shadow lebih lembut */
+  padding: 8px 0;
+  z-index: 1000;
+  border: 1px solid #f0f0f0;
+  overflow: hidden;
+}
+
+/* Setiap baris item */
+.dropdown-item {
+  display: flex;
+  align-items: center; /* Menyejajarkan ikon & teks secara vertikal */
+  padding: 12px 16px;
+  gap: 12px; /* Jarak antara ikon dan teks */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #333;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background-color: #fff0f3; /* Warna pink muda saat hover */
+  color: #ff4d6d;
+}
+
+/* Ukuran ikon agar seragam */
+.dropdown-icon {
+  font-size: 18px;
+  width: 20px; /* Memastikan lebar ikon sama agar teks di sampingnya lurus vertikal */
+  display: flex;
+  justify-content: center;
+}
+
+/* Garis pembatas yang rapi */
+.dropdown-divider {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 4px 0;
+}
+
+/* Style khusus logout */
+.logout-item {
+  color: #d63031;
+}
+
+.logout-item:hover {
+  background-color: #fff5f5;
+  color: #ff4d6d;
+}
+
 .row-group {
   display: flex;
   gap: 15px;
@@ -437,11 +494,13 @@ body {
 
 .search-bar {
   width: 100%;
-  padding: 12px 20px;
+  padding: 15px;
   border-radius: 25px;
+  box-sizing: border-box;
   border: 1px solid #ddd;
   background: white;
   outline: none;
+  transition: 0.3s;
 }
 
 .filter-group {
@@ -476,6 +535,7 @@ table {
 
 thead {
   background-color: var(--pink-light);
+  border: #554343 1px solid;
 }
 
 th {
@@ -505,4 +565,93 @@ td {
   background: white;
   border-radius: 5px;
   cursor: pointer;
+}
+
+/* Container untuk tombol-tombol aksi */
+.profile-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Tombol Back (Outline) */
+.btn-outline-pink {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 2px solid #ff4d6d;
+  border-radius: 8px;
+  background-color: transparent;
+  color: #ff4d6d;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-outline-pink:hover {
+  background-color: #fff0f3;
+}
+
+/* Tombol Edit/Save (Solid Pink) */
+.btn-primary-pink {
+  flex: 1; /* Supaya tombol ini memenuhi sisa ruang */
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #ff4d6d;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-primary-pink:hover {
+  background-color: #ff758f;
+}
+
+/* Tombol Cancel (Abu-abu) */
+.btn-cancel {
+  flex: 1;
+  padding: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #6d5656;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-cancel:hover {
+  background-color: #8a7373;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #ff4d6d;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #ff4d6d;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Tambahkan ini di App.css jika belum ada */
+.table-container .loading-container {
+    height: 300px; /* Batasi tinggi loading biar nggak se-layar penuh */
+    background: rgba(255, 255, 255, 0.5); /* Efek transparan dikit */
+    border-radius: 12px;
 }

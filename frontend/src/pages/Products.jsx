@@ -5,10 +5,11 @@ import '../App.css';
 
 const ProductPage = () => {
     const navigate = useNavigate();
-
-    // 2. State untuk menampung data dari Database (awalannya kosong [])
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showSettings, setShowSettings] = useState(false);
+    const [language, setLanguage] = useState('UK'); // Default bahasa Inggris
+
 
     // 3. Fungsi untuk mengambil data dari Backend
     const fetchProducts = async () => {
@@ -18,7 +19,7 @@ const ProductPage = () => {
             setProducts(response.data);
             setLoading(false);
         } catch (error) {
-            console.error("Gagal ambil data:", error);
+            console.error("failed to retrieve data:", error);
             setLoading(false);
         }
     };
@@ -33,6 +34,12 @@ const ProductPage = () => {
         }
     };
 
+    // --- DEFINISIKAN FUNGSI LOGOUT ---
+    const handleLogout = () => {
+        localStorage.removeproducts('token');
+        navigate('/');
+    };
+
     // 4. Jalankan fungsi fetch saat halaman pertama kali dibuka
     useEffect(() => {
         fetchProducts();
@@ -44,9 +51,9 @@ const ProductPage = () => {
             <div className="sidebar">
                 <div className="sidebar-logo">BURGERLICIOUS</div>
                 <div className="sidebar-menu">
-                    <div className="menu-item active">Products</div>
-                    <div className="menu-item" onClick={() => navigate('/transaksi')}>Transaksi</div>
-                    <div className="menu-item" onClick={() => navigate('/pegawai')}>Pegawai</div>
+                <div className="menu-item active" onClick={() => navigate('/products')}>Products</div>
+                <div className="menu-item" onClick={() => navigate('/transaksi')}>Transactions</div>
+                <div className="menu-item" onClick={() => navigate('/pegawai')}>Employees</div>
                 </div>
             </div>
 
@@ -54,28 +61,54 @@ const ProductPage = () => {
             <div className="main-content">
                 <div className="top-header">
                     <span className="header-icon" title="Profile" onClick={() => navigate('/profile')}>👤</span>
-                    <span className="header-icon" title="Settings">⚙️</span>
+
+                    {/* Container Settings dengan Dropdown */}
+                    <div className="settings-container" style={{ position: 'relative' }}>
+                        <span
+                            className="header-icon"
+                            title="Settings"
+                            onClick={() => setShowSettings(!showSettings)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            ⚙️
+                        </span>
+
+                        {showSettings && (
+                            <div className="dropdown-menu">
+                                <hr className="dropdown-divider" />
+
+                                <div className="dropdown-products logout-products" onClick={handleLogout}>
+                                    <span className="dropdown-icon">🚪</span>
+                                    <span>Logout</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-            {/* TOOLBAR (SEARCH & FILTER) */}
-            <div className="toolbar">
-            <input 
-                type="text" 
-                className="search-bar" 
-                placeholder="Search products here..." 
-            />
-            
-            <div className="filter-group">
-                <button className="btn-filter">🔍 Filter</button>
-                <button className="btn-filter">↕️ Sort By</button>
-                <button className="btn-filter" style={{backgroundColor: '#FF4D6D', color: 'white', border: 'none'}}>+ Add Product</button>
-            </div>
-            </div>
+                {/* TOOLBAR (SEARCH & FILTER) */}
+                <div className="toolbar">
+                    <input
+                        type="text"
+                        className="search-bar"
+                        placeholder="Search products here..."
+                    />
+
+                    <div className="filter-group">
+                        <button className="btn-filter">🔍 Filter</button>
+                        <button className="btn-filter">↕️ Sort By</button>
+                        <button className="btn-filter" style={{ backgroundColor: '#FF4D6D', color: 'white', border: 'none' }}>+ Add Product</button>
+                    </div>
+                </div>
 
                 {/* TABLE SECTION */}
                 <div className="table-container">
                     {loading ? (
-                        <p style={{ textAlign: 'center', padding: '20px' }}>Loading data...</p>
+                        <div className="loading-container" style={{ height: '300px' }}>
+                            {/* Pakai class spinner kamu di sini */}
+                            <div className="spinner"></div>
+                            <p>Load products data...</p>
+                        </div>
                     ) : (
                         <table>
                             <thead>
@@ -84,18 +117,17 @@ const ProductPage = () => {
                                     <th>Product Name</th>
                                     <th>Price</th>
                                     <th>Stock</th>
-                                    <th>Action</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {products.length > 0 ? (
-                                    products.map((item, index) => (
-                                        <tr key={item.id}>
+                                    products.map((products, index) => (
+                                        <tr key={products.id}>
                                             <td>{index + 1}</td>
-                                            <td>{item.name}</td>
-                                            <td>{item.category}</td>
-                                            <td>{item.price}</td>
-                                            <td>{item.stock}</td>
+                                            <td>{products.name}</td>
+                                            <td>{products.price}</td>
+                                            <td>{products.stock}</td>
                                             <td>
                                                 <button className="btn-edit">Edit</button>
                                                 <button className="btn-delete">Delete</button>
@@ -104,7 +136,7 @@ const ProductPage = () => {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="6" style={{ textAlign: 'center' }}>Data Kosong</td>
+                                        <td colSpan="6" style={{ textAlign: 'center' }}>Empty Products Data</td>
                                     </tr>
                                 )}
                             </tbody>
