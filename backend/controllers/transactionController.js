@@ -1,30 +1,26 @@
 const db = require('../config/db');
 
-exports.createTransaction = (req, res) => {
-  const { product_id, type, quantity } = req.body;
-
-  const stockChange = type === 'IN' ? quantity : -quantity;
-
-  db.query(
-    'UPDATE products SET stock = stock + ? WHERE id=?',
-    [stockChange, product_id]
-  );
-
-  db.query(
-    'INSERT INTO transactions VALUES (NULL,?,?,?,?,NOW())',
-    [product_id, req.user.id, type, quantity],
-    () => res.json({ message: 'Transaction saved' })
-  );
+exports.getTransactions = (req, res) => {
+  db.query('SELECT * FROM transactions', (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
 };
 
-exports.getTransactions = (req, res) => {
-  db.query('SELECT * FROM transactions', (e, r) => res.json(r));
+exports.createTransaction = (req, res) => {
+  const { product_id, quantity, type } = req.body;
+
+  db.query(
+    'INSERT INTO transactions (product_id, quantity, type, user_id) VALUES (?, ?, ?, ?)',
+    [product_id, quantity, type, req.user.id],
+    () => res.json({ message: 'Transaksi berhasil ditambahkan' })
+  );
 };
 
 exports.deleteTransaction = (req, res) => {
   db.query(
     'DELETE FROM transactions WHERE id=?',
     [req.params.id],
-    () => res.json({ message: 'Transaction deleted' })
+    () => res.json({ message: 'Transaksi berhasil dihapus' })
   );
 };
