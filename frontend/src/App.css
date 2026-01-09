@@ -1,0 +1,551 @@
+/* src/App.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+  --pink-primary: #FF4D6D;
+  --pink-light: #FFF5F7;
+  --pink-bg-circle: #FFD1DC;
+  --brown-text: #5D4037;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--pink-light);
+  overflow-x: hidden;
+}
+
+.profile-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.profile-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.profile-header p {
+  color: #888;
+  font-size: 15px;
+  margin-top: 15px;
+}
+
+/* Dekorasi Bola Pink */
+.circle-top {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background-color: var(--pink-bg-circle);
+  top: -100px;
+  right: -50px;
+  z-index: -1;
+}
+
+.circle-bottom {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #FFE4E1;
+  bottom: -50px;
+  left: -50px;
+  z-index: -1;
+}
+
+/* Container Profile */
+.profile-container {
+  width: 95%;
+  max-width: 450px;
+  padding: 40px;
+  background-color: #FFFFFF;
+  border-radius: 30px;
+  box-shadow: 0 15px 35px rgba(255, 182, 193, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 50px auto;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label-style {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brown-text);
+  margin-left: 5px;
+}
+
+.input-field {
+  padding: 12px 20px;
+  border-radius: 15px;
+  border: 2px solid #F0F0F0;
+  background-color: #ffc8c890;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.read-only {
+  background-color: #F9F9F9;
+  color: hwb(#7a5656);
+  border-color: #e0e0e0;
+  cursor: default;
+}
+
+.btn-primary-pink {
+  background-color: var(--pink-primary);
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-primary-pink:hover {
+  background-color: #E04360;
+}
+
+/* src/App.css */
+.splash-wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8adad; /* Warna dasar pink */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Container Kaca (Glassmorphism) */
+.glass-card {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 50px;
+  border-radius: 20px;
+  text-align: center;
+  width: 80%;
+  max-width: 500px;
+  z-index: 10;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.welcome-text {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn-splash {
+  padding: 12px 35px;
+  border-radius: 25px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-login {
+  background-color: #6d5656; /* Warna coklat gelap seperti di gambar */
+  color: white;
+}
+
+.btn-signup {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #6d5656;
+  border: 1px solid rgba(109, 86, 86, 0.3);
+}
+
+.btn-splash:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* Bola-bola Latar Belakang */
+.ball {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.ball-1 { width: 150px; height: 150px; background: linear-gradient(to right, #ff9a9e, #fad0c4); top: 20%; left: 5%; }
+.ball-2 { width: 250px; height: 250px; background: #8a6d6d; bottom: -50px; left: 40%; opacity: 0.6; }
+.ball-3 { width: 180px; height: 180px; background: #fbc2eb; top: 10%; right: 10%; opacity: 0.5; }
+
+/* src/App.css */
+
+.login-card {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: 25px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #6d5656;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.8);
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+}
+
+.btn-toggle-eye {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.btn-submit-login {
+  width: 100%;
+  padding: 12px;
+  background-color: #6d5656;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+}
+
+.btn-submit-login:hover {
+  background-color: #554343;
+}
+
+/* Tambahkan ini di App.css */
+
+.signup-container {
+  width: 90%;
+  max-width: 500px;
+  padding: 30px 40px;
+  background-color: #FFFFFF;
+  border-radius: 30px;
+  box-shadow: 0 15px 35px rgba(255, 182, 193, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+.row-group {
+  display: flex;
+  gap: 15px;
+}
+
+.flex-1 { flex: 1; }
+.flex-2 { flex: 2; }
+
+.signup-header {
+  text-align: center;
+}
+
+.signup-header h2 {
+  color: var(--pink-primary);
+  margin: 0;
+}
+
+.signup-header p {
+  color: #888;
+  font-size: 13px;
+}
+
+/* Susunan menyamping untuk label dan input */
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.label-side {
+  width: 150px; /* Atur lebar label supaya rapi sejajar */
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brown-text);
+  text-align: left;
+}
+
+.input-flex {
+  display: flex; /* Input akan mengambil sisa ruang yang ada */
+  
+}
+
+.footer-text {
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+}
+
+.link-pink {
+  color: var(--pink-primary);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Tombol khusus SignUp */
+.btn-submit-signup {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--pink-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Layout Utama */
+.dashboard-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.sidebar-logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--pink-primary);
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu-item {
+  padding: 12px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #555;
+  transition: 0.3s;
+}
+
+.menu-item:hover, .menu-item.active {
+  background-color: var(--pink-light);
+  color: var(--pink-primary);
+  font-weight: bold;
+}
+
+/* Content Area */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top Header */
+.top-header {
+  height: 70px;
+  background: white;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 30px;
+  gap: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.header-icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+}
+
+/* Search & Filter Section */
+.toolbar {
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.search-container {
+  flex: 1;
+  max-width: 600px;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  background: white;
+  outline: none;
+  font-size: 14px;
+}
+
+.action-group {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  transition: 0.3s;
+  white-space: nowrap; /* Teks tidak turun ke bawah */
+}
+
+.btn-action:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-add {
+  background-color: var(--pink-primary);
+  color: white;
+  border: none;
+}
+
+.btn-add:hover {
+  background-color: #E04360;
+}
+
+.filter-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-filter {
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Table Area */
+.table-container {
+  margin: 0 30px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  overflow: hidden;
+  flex: 1;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: var(--pink-light);
+}
+
+th {
+  text-align: left;
+  padding: 15px;
+  color: var(--brown-text);
+  font-size: 14px;
+}
+
+td {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+/* Pagination */
+.pagination-container {
+  padding: 15px 30px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-page {
+  padding: 5px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
