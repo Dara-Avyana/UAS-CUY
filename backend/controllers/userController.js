@@ -10,7 +10,6 @@ exports.getAllEmployees = (req, res) => {
     SELECT users.id, users.name, users.email, roles.name AS role
     FROM users
     JOIN roles ON users.role_id = roles.id
-    WHERE roles.name = 'pegawai'
   `;
 
   db.query(sql, (err, results) => {
@@ -18,6 +17,40 @@ exports.getAllEmployees = (req, res) => {
     res.json(results);
   });
 };
+
+
+// Helper untuk kirim error agar tidak ngetik berulang
+const sendError = (res, err) => res.status(500).json({ message: "Database Error", error: err.message });
+
+/**
+ * ADMIN ONLY - Melihat semua pegawai
+ */
+exports.getAllEmployees = (req, res) => {
+    const sql = `SELECT u.id, u.name, u.email, r.name AS role 
+                 FROM users u JOIN roles r ON u.role_id = r.id 
+                 WHERE r.name = 'pegawai'`;
+    
+    db.query(sql, (err, results) => {
+        if (err) return sendError(res, err);
+        res.json(results);
+    });
+};
+
+/**
+ * USER ONLY - Melihat profil sendiri (Versi Ringkas)
+ */
+exports.getMe = (req, res) => {
+    const sql = `SELECT u.id, u.name, u.email, r.name AS role_name 
+                 FROM users u JOIN roles r ON u.role_id = r.id 
+                 WHERE u.id = ?`;
+
+    db.query(sql, [req.user.id], (err, results) => {
+        if (err) return sendError(res, err);
+        if (!results.length) return res.status(404).json({ message: "User not found" });
+        res.json(results[0]);
+    });
+};
+
 
 /**
  * OWNER ONLY

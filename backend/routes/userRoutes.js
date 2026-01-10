@@ -14,6 +14,12 @@ router.get(
   userController.getAllEmployees
 );
 
+router.get(
+  '/me',
+  auth,
+  userController.getMe
+);
+
 /**
  * OWNER ONLY
  * Edit profil
