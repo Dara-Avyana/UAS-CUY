@@ -3,22 +3,47 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.register = (req, res) => {
-  const { name, email, password, role_id } = req.body;
+  const { name, email, password, keyword } = req.body;
 
-  if (!name || !email || !password || !role_id) {
-    return res.status(400).json({ message: 'Data tidak lengkap' });
+  // 1. Tentukan role berdasarkan keyword
+  let roleTarget = keyword === "ADMINT" ? 'admin' : (keyword === "SETAFF" ? 'pegawai' : null);
+  
+  if (!roleTarget) {
+    return res.status(400).json({ message: "Keyword salah!" });
   }
 
-  const hashedPassword = bcrypt.hashSync(password, 10);
+  // 2. Cari Role ID di tabel roles
+  db.query("SELECT id FROM roles WHERE name = ?", [roleTarget], (err, roles) => {
+    if (err) return res.status(500).json({ message: "Database Error", error: err });
+    
+    if (roles.length === 0) {
+      return res.status(500).json({ message: "Role tidak ditemukan di database" });
+    }
 
-  const sql = `
-    INSERT INTO users (name, email, password, role_id)
-    VALUES (?, ?, ?, ?)
-  `;
+    const roleId = roles[0].id;
 
-  db.query(sql, [name, email, hashedPassword, role_id], (err) => {
-    if (err) return res.status(500).json({ message: err.message });
-    res.json({ message: 'Register berhasil' });
+    // 3. Hash Password
+    bcrypt.hash(password, 10, (err, hashedPassword) => {
+      if (err) return res.status(500).json({ message: "Bcrypt Error" });
+
+      // 4. Simpan User ke Database
+      const sql = "INSERT INTO users (name, email, password, role_id) VALUES (?, ?, ?, ?)";
+      db.query(sql, [name, email, hashedPassword, roleId], (err, result) => {
+        if (err) {
+          return res.status(500).json({ 
+            message: "Gagal daftar. Email mungkin sudah ada.", 
+            error: err.message 
+          });
+        }
+
+        // 5. Berhasil!
+        res.status(201).json({
+          success: true,
+          message: "Registrasi Berhasil!",
+          userId: result.insertId
+        });
+      });
+    });
   });
 };
 
