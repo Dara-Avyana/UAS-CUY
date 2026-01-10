@@ -7,55 +7,46 @@ const SignupPage = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
-        username: '',
-        fullName: '',
-        age: '',
+        name: '',
         email: '',
         keyword: '',
         password: '',
         confirmPassword: ''
     });
 
-    // Fungsi untuk mengupdate state setiap kali input diketik
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    // 2. Fungsi handleSignup yang terhubung ke Backend
-    const handleSignup = async (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
 
-        // Validasi: Cek kecocokan password
+        // Validasi tambahan di Frontend
         if (formData.password !== formData.confirmPassword) {
-            alert("Password tidak cocok!");
-            return;
+            return alert("Password dan Confirm Password tidak cocok!");
         }
 
         try {
-            // Mengirim data ke backend (Stateless)
-            // Sesuaikan '/api/register' dengan route di backend kamu
-            const response = await axios.post('/api/register', {
-                username: formData.username,
-                fullName: formData.fullName,
-                age: formData.age,
+            console.log("Mengirim data...", formData);
+            const response = await axios.post('/api/auth/register', {
+                name: formData.name,
                 email: formData.email,
-                keyword: formData.keyword,
-                password: formData.password
+                password: formData.password,
+                keyword: formData.keyword // Pastikan backend menerima field ini
             });
 
-            // Jika berhasil
-            alert("Registrasi Berhasil! Silakan Login.");
+            alert("Berhasil: " + response.data.message);
             navigate('/login');
-            
-        } catch (err) {
-            // Jika gagal (server mati, username duplikat, dll)
-            console.error("Signup error:", err);
-            const message = err.response?.data?.message || "Koneksi ke server gagal!";
-            alert(message);
+        } catch (error) {
+            // Cek apakah ada pesan error spesifik dari backend
+            const errorMsg = error.response?.data?.message || "Terjadi kesalahan pada server";
+            alert("Gagal: " + errorMsg);
+            console.error("Detail Error:", error);
         }
     };
 
+    // RETURN INI HARUS DI LUAR handleRegister
     return (
         <div className="profile-wrapper">
             <div className="circle-top"></div>
@@ -67,44 +58,17 @@ const SignupPage = () => {
                     <p>Create your Burgerlicious account</p>
                 </div>
 
-                <form onSubmit={handleSignup} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    
-                    {/* Username */}
-                    <div className="input-row">
-                        <label className="label-side">Username :</label>
-                        <div className="input-flex">
-                            <input name="username"
-                                className="input-field"
-                                placeholder="Enter username"
-                                onChange={handleChange}
-                                value={formData.username}
-                                required />
-                        </div>
-                    </div>
+                <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
 
                     {/* Full Name */}
                     <div className="input-row">
                         <label className="label-side">Full Name :</label>
                         <div className="input-flex">
-                            <input name="fullName"
+                            <input name="name"
                                 className="input-field"
                                 placeholder="Enter full name"
                                 onChange={handleChange}
-                                value={formData.fullName}
-                                required />
-                        </div>
-                    </div>
-
-                    {/* Age */}
-                    <div className="input-row">
-                        <label className="label-side">Age :</label>
-                        <div className="input-flex">
-                            <input name="age"
-                                type="number"
-                                className="input-field"
-                                placeholder="Enter Age"
-                                onChange={handleChange}
-                                value={formData.age}
+                                value={formData.name}
                                 required />
                         </div>
                     </div>
@@ -127,12 +91,14 @@ const SignupPage = () => {
                     <div className="input-row">
                         <label className="label-side">Keyword :</label>
                         <div className="input-flex">
-                            <input name="keyword"
-                                className="input-field"
-                                placeholder="Secret Key"
-                                onChange={handleChange}
+                            <input
+                                name="keyword"
+                                type="text"
+                                placeholder="Enter Secret Keyword"
                                 value={formData.keyword}
-                                required />
+                                onChange={handleChange}
+                                className="input-field"
+                            />
                         </div>
                     </div>
 
@@ -150,9 +116,9 @@ const SignupPage = () => {
                                 value={formData.password}
                                 required
                             />
-                            <button 
-                                type="button" 
-                                onClick={() => setShowPassword(!showPassword)} 
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
                                 className="btn-toggle-eye"
                                 style={{ position: 'absolute', right: '10px', background: 'none', border: 'none', cursor: 'pointer' }}
                             >
@@ -178,7 +144,7 @@ const SignupPage = () => {
                     </div>
 
                     <button type="submit" className="btn-submit-signup">Sign Up</button>
-                    
+
                     <p className="footer-text">
                         Already have an account? <span className="link-pink" style={{ cursor: 'pointer', fontWeight: 'bold' }} onClick={() => navigate('/login')}>Login</span>
                     </p>
@@ -187,5 +153,4 @@ const SignupPage = () => {
         </div>
     );
 };
-
 export default SignupPage;
