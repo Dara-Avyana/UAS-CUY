@@ -1,31 +1,42 @@
+// controllers/productController.js (MODIFIED)
 const db = require('../config/db');
 
-exports.createProduct = (req, res, next) => { // Tambahkan 'next'
-  const { name, price, stock } = req.body;
-  db.query(
-    'INSERT INTO products VALUES (NULL,?,?,?)',
-    [name, price, stock],
-    (err, result) => { // Tambahkan callback
-      if (err) return next(err); // Tangani error
-      res.json({ message: 'Product added', id: result.insertId });
-    }
-  );
+exports.createProduct = (req, res, next) => {
+    const { name, price, stock } = req.body;
+    db.query(
+        'INSERT INTO products (name, price, stock) VALUES (?,?,?)', // Tambahkan nama kolom agar lebih eksplisit
+        [name, price, stock],
+        (err, result) => {
+            if (err) return next(err);
+            res.json({ message: 'Product added', id: result.insertId });
+        }
+    );
 };
 
-exports.getProducts = (req, res, next) => { // Tambahkan 'next'
-  db.query('SELECT * FROM products', (err, results) => { // Gunakan nama variabel yang jelas
-    if (err) return next(err); // Tangani error
-    res.json(results);
-  });
+exports.getProducts = (req, res, next) => {
+    const { search } = req.query; // Ambil query string 'search'
+    let sql = 'SELECT * FROM products';
+    let params = [];
+    
+    // Jika ada kata kunci pencarian, tambahkan klausa WHERE
+    if (search) {
+      sql += ' WHERE name LIKE ?';
+      params.push(`%${search}%`); // Mencari produk yang mengandung kata kunci
+    }
+
+    db.query(sql, params, (err, results) => {
+        if (err) return next(err);
+        res.json(results);
+    });
 };
 
-exports.deleteProduct = (req, res, next) => { // Tambahkan 'next'
-  db.query(
-    'DELETE FROM products WHERE id=?',
-    [req.params.id],
-    (err) => { // Tambahkan callback
-      if (err) return next(err); // Tangani error
-      res.json({ message: 'Product deleted' });
-    }
-  );
+exports.deleteProduct = (req, res, next) => {
+    db.query(
+        'DELETE FROM products WHERE id=?',
+        [req.params.id],
+        (err) => {
+            if (err) return next(err);
+            res.json({ message: 'Product deleted' });
+        }
+    );
 };
