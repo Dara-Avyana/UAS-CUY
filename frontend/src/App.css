@@ -505,7 +505,7 @@ body {
 
 .filter-group {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 10px;
 }
 
@@ -517,6 +517,63 @@ body {
   cursor: pointer;
   font-size: 14px;
 }
+
+/* Container Tombol Aksi */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Tombol Edit (Pink Pudar/Soft) */
+.btn-edit {
+    background-color: #f8bbd0; /* Soft Pink */
+    color: #880e4f;
+    border: 1px solid #f48fb1;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+.btn-edit:hover {
+    background-color: #f48fb1;
+    color: white;
+}
+
+/* Tombol Delete (Pink Jreng/Bold) */
+.btn-delete {
+    background-color: #ad1457; /* Deep/Hot Pink */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+}
+
+.btn-delete:hover {
+    background-color: #880e4f;
+    transform: scale(1.05); /* Sedikit membesar saat hover */
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex; justify-content: center; align-items: center;
+}
+.modal-content.pink-theme {
+    background: white; padding: 20px; border-radius: 15px; width: 400px;
+    border: 3px solid #FF4D6D;
+}
+.modal-content input {
+    width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd;
+}
+.btn-save { background: #FF4D6D; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
+.btn-cancel { background: #eee; border: none; padding: 10px; border-radius: 8px; margin-left: 10px; cursor: pointer; }
 
 /* Table Area */
 .table-container {
@@ -557,6 +614,62 @@ td {
   display: flex;
   justify-content: center;
   gap: 10px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    min-width: 120px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.btn-add {
+    background-color: #FF4D6D;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    min-width: 120px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.dropdown-menu label {
+    font-size: 14px;
+    margin: 5px 0;
+    cursor: pointer;
+    color: #333;
+}
+
+/* Modal form styling */
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
 .btn-page {
@@ -654,4 +767,86 @@ td {
     height: 300px; /* Batasi tinggi loading biar nggak se-layar penuh */
     background: rgba(255, 255, 255, 0.5); /* Efek transparan dikit */
     border-radius: 12px;
+}
+
+/* --- Tambahan untuk Pagination yang Lebih Cantik --- */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    background: white;
+    border-top: 1px solid #eee;
+}
+
+.page-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.page-buttons button {
+    padding: 6px 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+.page-buttons button:hover:not(:disabled) {
+    background-color: var(--pink-light);
+    color: var(--pink-primary);
+    border-color: var(--pink-primary);
+}
+
+.page-buttons button:disabled {
+    background-color: #f9f9f9;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+/* --- Tambahan untuk Badge Stok --- */
+.stock-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #e3fcef;
+    color: #00875a;
+}
+
+.stock-badge.low {
+    background-color: #ffebe6;
+    color: #de350b;
+}
+
+/* --- Perbaikan Dropdown Settings & Column Visibility --- */
+/* Agar dropdown tidak tertutup table, tambahkan position relative pada container */
+.settings-container, .filter-group > div {
+    position: relative;
+}
+
+/* Item dropdown khusus logout agar warnanya beda */
+.dropdown-item.logout {
+    color: #d63031;
+    font-weight: 600;
+}
+
+.dropdown-item.logout:hover {
+    background-color: #fff5f5;
+    color: #ff4d6d;
+}
+
+/* --- Layout Header --- */
+.header-left h2 {
+    margin: 0;
+    color: var(--brown-text);
+    font-size: 20px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }

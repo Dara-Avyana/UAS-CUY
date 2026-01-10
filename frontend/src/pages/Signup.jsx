@@ -6,6 +6,7 @@ import '../App.css';
 const SignupPage = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -26,6 +27,9 @@ const SignupPage = () => {
         if (formData.password !== formData.confirmPassword) {
             return alert("Password dan Confirm Password tidak cocok!");
         }
+
+        // 2. Aktifkan Loading
+        setLoading(true);
 
         try {
             console.log("Mengirim data...", formData);
@@ -143,7 +147,9 @@ const SignupPage = () => {
                         </div>
                     </div>
 
-                    <button type="submit" className="btn-submit-signup">Sign Up</button>
+                    <button type="submit" className="btn-submit-signup">
+                        Sign Up
+                    </button>
 
                     <p className="footer-text">
                         Already have an account? <span className="link-pink" style={{ cursor: 'pointer', fontWeight: 'bold' }} onClick={() => navigate('/login')}>Login</span>
