@@ -5,13 +5,13 @@ const userController = require('../controllers/userController');
 
 /**
  * ADMIN ONLY
- * Lihat semua pegawai
+ * Lihat semua user (admin & pegawai)
  */
 router.get(
-  '/employees',
+  '/all',
   auth,
   role('admin'),
-  userController.getAllEmployees
+  userController.getAllUsers
 );
 
 router.get(

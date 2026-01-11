@@ -54,9 +54,8 @@ exports.getTransactions = (req, res, next) => {
   sql += ` ORDER BY ${sortByColumn} ${sortOrder}`;
 
   // 5. Pagination Logic (LIMIT and OFFSET)
-  const dataParams = [...params]; // Clone parameters for data query
-  dataParams.push(validLimit, offset);
-
+  sql += ' LIMIT ? OFFSET ?';
+  const dataParams = [...params, validLimit, offset];
 
   // Jalankan query Count (Total Items)
   db.query(countSql, params, (err, countResults) => {
@@ -85,11 +84,6 @@ exports.getTransactions = (req, res, next) => {
 exports.createTransaction = (req, res, next) => {
   const { product_id, quantity, type } = req.body;
   const userId = req.user.id;
-  
-  db.query(insertSql, [product_id, quantity, type, userId, now], (err, result) => {
-    if (err) return next(err);
-    res.status(201).json({ message: 'Transaksi berhasil dibuat', transactionId: result.insertId });
-  });
 
   if (!['masuk', 'keluar'].includes(type)) {
     return res.status(400).json({ message: "Tipe transaksi harus 'masuk' atau 'keluar'" });

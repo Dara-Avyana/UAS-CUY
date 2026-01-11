@@ -78,7 +78,7 @@ const ProfilePage = () => {
             <div className="profile-container">
                 <div className="profile-header">
                     <h2 style={{ color: 'var(--pink-primary)' }}>My Profile</h2>
-                    <p>Burgerlicious Management System</p>
+                    <p>Electronix Management System</p>
                 </div>
 
                 {/* Row ID, Role */}
@@ -117,10 +117,11 @@ const ProfilePage = () => {
                     <input
                         name="email"
                         type="email"
+                        required
                         className={`input-field ${!isEditing ? 'read-only' : ''}`}
                         value={user.email}
                         readOnly={!isEditing}
-                        onChange={handleChange}
+                        onChange={(e) => setUser({...user, email: e.target.value})}
                         placeholder="example@mail.com"
                     />
                 </div>

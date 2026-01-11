@@ -1,56 +1,41 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // 1. Pastikan Axios di-import
+import axios from "axios";
 import '../App.css';
 
 const SignupPage = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        keyword: '',
-        password: '',
-        confirmPassword: ''
+        name: '', email: '', keyword: '', password: '', confirmPassword: ''
     });
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleRegister = async (e) => {
         e.preventDefault();
-
-        // Validasi tambahan di Frontend
         if (formData.password !== formData.confirmPassword) {
             return alert("Password dan Confirm Password tidak cocok!");
         }
 
-        // 2. Aktifkan Loading
         setLoading(true);
-
         try {
-            console.log("Mengirim data...", formData);
-            const response = await axios.post('/api/auth/register', {
-                name: formData.name,
-                email: formData.email,
-                password: formData.password,
-                keyword: formData.keyword // Pastikan backend menerima field ini
-            });
+            // Destructuring untuk memisahkan confirmPassword agar tidak ikut terkirim ke backend
+            const { confirmPassword, ...payload } = formData;
+            const response = await axios.post('/api/auth/register', payload);
 
             alert("Berhasil: " + response.data.message);
             navigate('/login');
         } catch (error) {
-            // Cek apakah ada pesan error spesifik dari backend
-            const errorMsg = error.response?.data?.message || "Terjadi kesalahan pada server";
-            alert("Gagal: " + errorMsg);
-            console.error("Detail Error:", error);
+            alert("Gagal: " + (error.response?.data?.message || "Terjadi kesalahan server"));
+        } finally {
+            setLoading(false);
         }
     };
 
-    // RETURN INI HARUS DI LUAR handleRegister
     return (
         <div className="profile-wrapper">
             <div className="circle-top"></div>
@@ -59,21 +44,15 @@ const SignupPage = () => {
             <div className="signup-container">
                 <div className="signup-header">
                     <h2>Sign Up</h2>
-                    <p>Create your Burgerlicious account</p>
+                    <p>Create your SUB-ATOMIC account</p>
                 </div>
 
                 <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-
                     {/* Full Name */}
                     <div className="input-row">
                         <label className="label-side">Full Name :</label>
                         <div className="input-flex">
-                            <input name="name"
-                                className="input-field"
-                                placeholder="Enter full name"
-                                onChange={handleChange}
-                                value={formData.name}
-                                required />
+                            <input name="name" className="input-field" placeholder="Enter full name" onChange={handleChange} value={formData.name} required />
                         </div>
                     </div>
 
@@ -81,13 +60,7 @@ const SignupPage = () => {
                     <div className="input-row">
                         <label className="label-side">Email :</label>
                         <div className="input-flex">
-                            <input name="email"
-                                type="email"
-                                className="input-field"
-                                placeholder="example@mail.com"
-                                onChange={handleChange}
-                                value={formData.email}
-                                required />
+                            <input name="email" type="email" className="input-field" placeholder="example@mail.com" onChange={handleChange} value={formData.email} required />
                         </div>
                     </div>
 
@@ -95,14 +68,7 @@ const SignupPage = () => {
                     <div className="input-row">
                         <label className="label-side">Keyword :</label>
                         <div className="input-flex">
-                            <input
-                                name="keyword"
-                                type="text"
-                                placeholder="Enter Secret Keyword"
-                                value={formData.keyword}
-                                onChange={handleChange}
-                                className="input-field"
-                            />
+                            <input name="keyword" type="text" className="input-field" placeholder="Enter Secret Keyword" onChange={handleChange} value={formData.keyword} required />
                         </div>
                     </div>
 
@@ -147,8 +113,8 @@ const SignupPage = () => {
                         </div>
                     </div>
 
-                    <button type="submit" className="btn-submit-signup">
-                        Sign Up
+                    <button type="submit" className="btn-submit-signup" disabled={loading}>
+                        {loading ? "Processing..." : "Sign Up"}
                     </button>
 
                     <p className="footer-text">

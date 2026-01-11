@@ -231,6 +231,7 @@ body {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .login-input {
@@ -242,18 +243,24 @@ body {
   outline: none;
   font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
+  padding-right: 40px; /* space for eye button */
 }
 
 .btn-toggle-eye {
   position: absolute;
-  right: 10px;
-  background: none;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0;
+  height: 24px;
+  width: 24px;
   border: none;
+  background: none;
   cursor: pointer;
   font-size: 1.2rem;
-  padding: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .btn-submit-login {
@@ -849,4 +856,63 @@ td {
     display: flex;
     align-items: center;
     gap: 20px;
+}
+
+/* Style untuk menu yang tidak bisa diakses */
+.disabled-menu {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+    background-color: transparent !important; /* Mencegah hover effect */
+    color: #999 !important;
+}
+
+/* Tooltip sederhana bawaan browser muncul dari atribut 'title' */
+/* Tapi jika ingin lebih cantik, bisa pakai class ini untuk tombol */
+button:disabled {
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+.btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+/* --- Konsistensi Input & Toggle Eye di Login/Signup --- */
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-container .login-input,
+.input-container .input-field {
+  width: 100%;
+  min-width: 0;
+  padding-right: 40px;
+  box-sizing: border-box;
+}
+
+.btn-toggle-eye {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0;
+  height: 24px;
+  width: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-input, .input-field {
+  width: 100%;
+  box-sizing: border-box;
 }

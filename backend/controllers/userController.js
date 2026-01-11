@@ -2,37 +2,49 @@ const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 
 /**
- * ADMIN ONLY
- * Melihat semua pegawai
+ * ADMIN ONLY - Melihat semua user (admin & pegawai) dengan Filtering & Pagination
  */
-exports.getAllEmployees = (req, res) => {
-  const sql = `
-    SELECT users.id, users.name, users.email, roles.name AS role
-    FROM users
-    JOIN roles ON users.role_id = roles.id
-  `;
+exports.getAllUsers = (req, res) => {
+    const search = req.query.search || '';
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const sortBy = req.query.sort_by || 'id';
+    const order = (req.query.order || 'ASC').toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+    const offset = (page - 1) * limit;
 
-  db.query(sql, (err, results) => {
-    if (err) return res.status(500).json(err);
-    res.json(results);
-  });
-};
+    // 2. Query pertama: Hitung total data untuk keperluan pagination di Frontend
+    const countSql = `
+        SELECT COUNT(*) as total 
+        FROM users u 
+        JOIN roles r ON u.role_id = r.id 
+        WHERE u.name LIKE ? OR u.email LIKE ?`;
+    db.query(countSql, [`%${search}%`, `%${search}%`], (err, countResult) => {
+        if (err) return res.status(500).json({ message: err.message });
+        const totalItems = countResult[0].total;
+        const totalPages = Math.ceil(totalItems / limit);
 
-
-// Helper untuk kirim error agar tidak ngetik berulang
-const sendError = (res, err) => res.status(500).json({ message: "Database Error", error: err.message });
-
-/**
- * ADMIN ONLY - Melihat semua pegawai
- */
-exports.getAllEmployees = (req, res) => {
-    const sql = `SELECT u.id, u.name, u.email, r.name AS role 
-                 FROM users u JOIN roles r ON u.role_id = r.id 
-                 WHERE r.name = 'pegawai'`;
-    
-    db.query(sql, (err, results) => {
-        if (err) return sendError(res, err);
-        res.json(results);
+        // 3. Query kedua: Ambil data spesifik sesuai halaman, pencarian, dan sorting
+        const allowedSorts = ['id', 'name', 'email', 'role'];
+        const sortColumn = allowedSorts.includes(sortBy) ? sortBy : 'id';
+        const sql = `
+            SELECT u.id, u.name, u.email, r.name AS role 
+            FROM users u 
+            JOIN roles r ON u.role_id = r.id 
+            WHERE u.name LIKE ? OR u.email LIKE ? 
+            ORDER BY u.${sortColumn} ${order} 
+            LIMIT ? OFFSET ?`;
+        db.query(sql, [`%${search}%`, `%${search}%`, limit, offset], (err, results) => {
+            if (err) return res.status(500).json({ message: err.message });
+            res.json({
+                data: results,
+                pagination: {
+                    totalItems,
+                    totalPages,
+                    currentPage: page,
+                    itemsPerPage: limit
+                }
+            });
+        });
     });
 };
 
@@ -58,6 +70,7 @@ exports.getMe = (req, res) => {
  */
 exports.updateProfile = (req, res) => {
   const userId = parseInt(req.params.id);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (req.user.id !== userId) {
     return res.status(403).json({
@@ -66,6 +79,14 @@ exports.updateProfile = (req, res) => {
   }
 
   const { name, email } = req.body;
+
+  if (!name || !email) {
+    return res.status(400).json({ message: 'Nama dan email harus diisi' });
+  }
+
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: 'Format email tidak valid' });
+  }
 
   db.query(
     'UPDATE users SET name=?, email=? WHERE id=?',
@@ -79,19 +100,43 @@ exports.updateProfile = (req, res) => {
  * Ganti password
  */
 exports.updatePassword = (req, res) => {
-  const userId = parseInt(req.params.id);
+  const { id } = req.params; // Lebih singkat
+  const { oldPassword, newPassword } = req.body;
+  const userIdFromToken = req.user.id;
 
-  if (req.user.id !== userId) {
-    return res.status(403).json({
-      message: 'Anda hanya boleh mengubah password sendiri'
-    });
+  // 1. Validasi Kepemilikan (Gunakan != agar fleksibel string/number)
+  if (id != userIdFromToken) {
+    return res.status(403).json({ message: 'Akses ditolak: Ini bukan akun Anda.' });
   }
 
-  const hashed = bcrypt.hashSync(req.body.password, 10);
+  // 2. Validasi Input
+  if (!oldPassword || !newPassword) {
+    return res.status(400).json({ message: 'Data tidak lengkap.' });
+  }
 
-  db.query(
-    'UPDATE users SET password=? WHERE id=?',
-    [hashed, userId],
-    () => res.json({ message: 'Password berhasil diperbarui' })
-  );
+  // 3. Verifikasi Password Lama
+  const sqlSelect = 'SELECT password FROM users WHERE id = ?';
+  db.query(sqlSelect, [userIdFromToken], (err, results) => {
+    if (err) return res.status(500).json({ message: 'Database error.' });
+    if (results.length === 0) return res.status(404).json({ message: 'User tidak ditemukan.' });
+
+    const user = results[0];
+    const isMatch = bcrypt.compareSync(oldPassword, user.password);
+    
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Password lama tidak sesuai.' });
+    }
+
+    // 4. Update Password Baru
+    const salt = 10;
+    const hashed = bcrypt.hashSync(newPassword, salt);
+    const sqlUpdate = 'UPDATE users SET password = ? WHERE id = ?';
+
+    db.query(sqlUpdate, [hashed, userIdFromToken], (err, result) => {
+      if (err) return res.status(500).json({ message: 'Gagal memperbarui password.' });
+      
+      // Berhasil
+      return res.status(200).json({ message: 'Password berhasil diubah.' });
+    });
+  });
 };

@@ -4,40 +4,32 @@ import axios from 'axios';
 import '../App.css';
 
 const LoginPage = () => {
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
-    // 1. Ganti state username menjadi email
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
-            // 2. Gunakan URL lengkap (127.0.0.1) dan kirim objek email
-            const response = await axios.post('/api/auth/login', { 
-                email, 
-                password 
-            });
-
-            // 3. Simpan Token & Role (opsional tapi berguna)
+            const response = await axios.post('/api/auth/login', { email, password });
             localStorage.setItem('token', response.data.token);
             
-            alert("Login Berhasil! Selamat datang.");
-            
-            // Pindah ke halaman Products
+            alert("Login Berhasil!");
             navigate('/products');
         } catch (err) {
-            if (err.response) {
-                // Pesan error dari backend (misal: "User not found")
-                alert("Login Gagal: " + (err.response.data.message || "Email atau Password salah!"));
-            } else {
-                alert("Server tidak merespons. Pastikan Backend & CORS sudah jalan!");
-            }
+            const msg = err.response?.data?.message || "Email atau Password salah!";
+            alert("Login Gagal: " + msg);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="splash-wrapper">
+            {/* Elemen Visual (Tetap dipertahankan agar tidak jelek) */}
             <div className="ball ball-1"></div>
             <div className="ball ball-2"></div>
             <div className="ball ball-3"></div>
@@ -51,7 +43,7 @@ const LoginPage = () => {
                     <div className="form-group">
                         <label>Email Address</label>
                         <input
-                            type="email" // Gunakan type email untuk validasi dasar
+                            type="email"
                             className="login-input"
                             placeholder="Enter your email"
                             value={email}
@@ -76,13 +68,13 @@ const LoginPage = () => {
                                 className="btn-toggle-eye"
                                 onClick={() => setShowPassword(!showPassword)}
                             >
-                                {showPassword ? '🫣' : '👁️'}
+                                {showPassword ? '🫣' : '😎'}
                             </button>
                         </div>
                     </div>
 
-                    <button type="submit" className="btn-submit-login">
-                        Login
+                    <button type="submit" className="btn-submit-login" disabled={loading}>
+                        {loading ? "Checking..." : "Login"}
                     </button>
                 </form>
 

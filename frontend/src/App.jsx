@@ -5,7 +5,8 @@ import ProfilePage from './pages/Profile';
 import SignupPage from './pages/Signup';
 import ProductPage from './pages/Products';
 import TransaksiPage from './pages/Transactions';
-import PegawaiPage from './pages/Pegawai';
+import UserPage from './pages/User';
+import ChangePassword from './pages/ChangePassword';
 import axios from 'axios';
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/products" element={<ProductPage />} />
         <Route path="/transaksi" element={<TransaksiPage />} />
-        <Route path="/pegawai" element={<PegawaiPage />} />
+        <Route path="/pengguna" element={<UserPage />} />
+        <Route path="/change-password" element={<ChangePassword />} />
       </Routes>
     </Router>
   );

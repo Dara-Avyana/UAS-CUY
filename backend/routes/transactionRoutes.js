@@ -5,7 +5,7 @@ const role = require("../middlewares/roleMiddleware");
 const c = require("../controllers/transactionController");
 
 // POST hanya untuk Admin (berdasarkan permintaan "staff tidak bisa send method pos kecuali admin")
-router.post("/", auth, role('admin'), c.createTransaction); 
+router.post("/", auth, c.createTransaction); 
 
 // GET bisa diakses oleh Admin atau Pegawai
 router.get("/", auth, c.getTransactions);

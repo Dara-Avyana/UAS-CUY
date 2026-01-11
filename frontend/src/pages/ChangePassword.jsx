@@ -1,15 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Tambah useEffect
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../App.css'; // Pastikan CSS kamu terload
+import '../App.css';
 
 const ChangePassword = () => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [userId, setUserId] = useState(null); // Simpan ID di sini
+
     const [formData, setFormData] = useState({
         oldPassword: '',
         newPassword: '',
         confirmPassword: ''
     });
+
+    // AMBIL DATA USER SAAT HALAMAN DIBUKA (Sama seperti Profile)
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get('/api/users/me', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setUserId(response.data.id); // Set ID dari database
+            } catch (err) {
+                console.error("Gagal verifikasi user", err);
+                navigate('/login');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUser();
+    }, [navigate]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,30 +39,30 @@ const ChangePassword = () => {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
-
-        // 1. Validasi kecocokan password baru di Frontend
         if (formData.newPassword !== formData.confirmPassword) {
             return alert("Password baru dan konfirmasi tidak cocok!");
         }
 
         try {
             const token = localStorage.getItem('token');
-            // Ambil ID user dari payload token jika perlu, atau gunakan /me di backend
-            // Di sini kita asumsikan routemu: PATCH /api/users/password
-            await axios.patch('/api/users/password', {
+            // Gunakan userId yang didapat dari fetchUser tadi
+            await axios.put(`/api/users/${userId}/password`, {
                 oldPassword: formData.oldPassword,
                 newPassword: formData.newPassword
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            alert("Password berhasil diubah! Silakan login kembali.");
-            localStorage.removeItem('token'); // Logout otomatis demi keamanan
+            alert("Password berhasil diperbarui!");
+            alert("Silakan login kembali dengan password baru.");
+            localStorage.removeItem('token');
             navigate('/login');
         } catch (err) {
             alert(err.response?.data?.message || "Gagal mengubah password");
         }
     };
+
+    if (loading) return <div className="spinner"></div>;
 
     return (
         <div className="profile-wrapper">
